@@ -1,0 +1,62 @@
+backend:
+  name: github
+  repo: USERNEV/REPO_NEV
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "pages"
+    label: "Oldalak"
+    files:
+      - file: "content/home.json"
+        label: "Főoldal"
+        name: "home"
+        fields:
+          - { label: "Címsor", name: "title", widget: "string" }
+          - { label: "Alcím", name: "subtitle", widget: "string" }
+
+      - file: "content/services.json"
+        label: "Szolgáltatások"
+        name: "services"
+        fields:
+          - { label: "Címsor", name: "title", widget: "string" }
+          - label: "Lista"
+            name: "items"
+            widget: "list"
+            field: { label: "Elem", name: "item", widget: "string" }
+
+      - file: "content/price.json"
+        label: "Árak"
+        name: "price"
+        fields:
+          - { label: "Címsor", name: "title", widget: "string" }
+          - { label: "Szöveg", name: "text", widget: "text" }
+
+      - file: "content/contact.json"
+        label: "Kapcsolat"
+        name: "contact"
+        fields:
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "Telefon", name: "phone", widget: "string" }
+
+  - name: "gallery"
+    label: "Galéria"
+    files:
+      - file: "content/gallery.json"
+        label: "Galéria képek"
+        name: "gallery"
+        fields:
+          - label: "Konyha"
+            name: "konyha"
+            widget: "list"
+            field: { label: "Kép", name: "image", widget: "image" }
+          - label: "Előszoba"
+            name: "eloszoba"
+            widget: "list"
+            field: { label: "Kép", name: "image", widget: "image" }
+          - label: "Gardrób"
+            name: "gardrob"
+            widget: "list"
+            field: { label: "Kép", name: "image", widget: "image" }
