@@ -2,7 +2,8 @@ backend:
   name: github
   repo: tozsi68/huhabutor
   branch: main
-  base_url: https://decap-oauth.netlify.app
+  base_url: https://decap-oauth.netlify.app/.netlify/functions
+
 
 
 
