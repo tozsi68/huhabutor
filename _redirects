@@ -1,1 +1,2 @@
-/.netlify/identity/*  /.netlify/functions/identity  200
+/.netlify/*  /.netlify/:splat  200
+/*  /index.html  200

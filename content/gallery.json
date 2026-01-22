@@ -1,1 +1,7 @@
-{ "konyha": [], "eloszoba": [], "gardrob": [] }
+{
+  "konyha": [
+    "images/hero/gallery/konyha/1.jpg",
+    "images/hero/gallery/konyha/2.jpg",
+    "images/hero/gallery/konyha/hero.jpg"
+  ]
+}

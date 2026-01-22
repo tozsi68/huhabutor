@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin panel – HuHa Bútor</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .panel{max-width:980px;margin:0 auto;padding:24px}
+    .panel h2{margin-top:0}
+    .grid{display:grid;gap:16px;grid-template-columns:1fr}
+    @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+    .card{background:#fff;border:1px solid #e9e9e9;border-radius:18px;
+      box-shadow:0 10px 30px rgba(0,0,0,.06);padding:18px}
+    label{display:block;font-weight:700;margin:10px 0 6px}
+    input, textarea, select{width:100%;border:1px solid #ddd;border-radius:12px;padding:12px}
+    textarea{min-height:120px;resize:vertical}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+    .btn{border:0;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}
+    .btn-primary{background:#111;color:#fff}
+    .btn-ghost{background:#f2f2f2;color:#111}
+    .btn-danger{background:#ffeded;color:#a30000}
+    .note{color:#666;font-size:14px;line-height:1.4;margin-top:10px}
+    .preview{margin-top:10px;max-width:100%;border-radius:12px;display:none;border:1px solid #eee}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .row > *{flex:1}
+    .gallery-list{display:grid;gap:10px;margin-top:12px}
+    .gallery-item{display:flex;gap:12px;align-items:center;border:1px solid #eee;border-radius:14px;padding:10px}
+    .thumb{width:72px;height:54px;object-fit:cover;border-radius:10px;border:1px solid #eee;background:#fafafa}
+    .grow{flex:1;min-width:0}
+    .small{font-size:13px;color:#666;word-break:break-all}
+    .page-item{border:1px solid #eee;border-radius:14px;padding:12px;margin-top:10px}
+    .page-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .pill{font-size:12px;padding:4px 10px;border-radius:999px;background:#f2f2f2}
+    .block{border:1px dashed #ddd;border-radius:14px;padding:12px;margin-top:12px}
+    .block-title{display:flex;gap:10px;align-items:center;justify-content:space-between}
+    .block-title strong{font-size:14px}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <h1 class="logo">HuHa Bútor</h1>
+      <nav class="main-nav">
+        <a href="./index.html" class="nav-link">Weboldal</a>
+        <a href="admin.html" class="nav-link">Kilépés</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="panel">
+    <h2>Tartalom szerkesztése (vázlat)</h2>
+    <p class="note">Ideiglenes: LocalStorage. Később éles mentés.</p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Főoldal</h3>
+
+        <label for="homeTitle">Címsor</label>
+        <input id="homeTitle" />
+
+        <label for="homeSubtitle">Alcím</label>
+        <input id="homeSubtitle" />
+
+        <label for="homeImage">Főoldali kép (opcionális)</label>
+        <input type="file" id="homeImage" accept="image/*" />
+        <img id="homePreview" class="preview" alt="Előnézet">
+      </div>
+
+      <div class="card">
+        <h3>Kapcsolat</h3>
+
+        <label for="contactEmail">Email</label>
+        <input id="contactEmail" />
+
+        <label for="contactPhone">Telefon</label>
+        <input id="contactPhone" />
+      </div>
+    </div>
+
+    <!-- OLDALAK -->
+    <div class="card" style="margin-top:16px">
+      <h3>Fejléc menüpontok / Blokkos oldalak</h3>
+      <p class="note">Új menüpont = új szekció. A tartalom blokkokból épül fel.</p>
+
+      <div class="row">
+        <div>
+          <label for="pageTitle">Menüpont neve</label>
+          <input id="pageTitle" placeholder="Pl. GYIK, Referenciák, Karrier..." />
+        </div>
+        <div>
+          <label for="pageId">Azonosító (id)</label>
+          <input id="pageId" placeholder="pl. gyik" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-ghost" id="genIdBtn" type="button">ID generálás névből</button>
+        <button class="btn btn-primary" id="createPageBtn" type="button">Oldal létrehozása</button>
+      </div>
+
+      <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
+
+      <div class="row">
+        <div>
+          <label for="pageSelect">Szerkesztendő oldal</label>
+          <select id="pageSelect"></select>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button class="btn btn-danger" id="deletePageBtn" type="button">Oldal törlése</button>
+        </div>
+      </div>
+
+      <div id="blocksArea"></div>
+
+      <div class="row" style="margin-top:12px">
+        <div>
+          <label for="blockType">Új blokk típusa</label>
+          <select id="blockType">
+            <option value="heading">Címsor</option>
+            <option value="text">Szöveg</option>
+            <option value="list">Lista</option>
+            <option value="image">Kép</option>
+            <option value="button">Gomb (CTA)</option>
+          </select>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button class="btn btn-ghost" id="addBlockBtn" type="button">+ Blokk hozzáadása</button>
+        </div>
+      </div>
+
+      <div id="pagesList"></div>
+    </div>
+
+    <!-- GALÉRIA -->
+    <div class="card" style="margin-top:16px">
+      <h3>Galéria kezelése</h3>
+
+      <label for="galleryCategory">Kategória</label>
+      <select id="galleryCategory"></select>
+
+      <div class="row" style="margin-top:10px">
+        <input id="newCategory" placeholder="Új kategória neve (pl. fürdőszoba)" />
+        <button class="btn btn-ghost" id="addCategoryBtn" type="button" style="flex:0 0 auto">Kategória létrehozása</button>
+      </div>
+
+      <label for="galleryImage" style="margin-top:12px">Kép hozzáadása a kiválasztott kategóriához</label>
+      <input type="file" id="galleryImage" accept="image/*" />
+
+      <div class="gallery-list" id="galleryList"></div>
+    </div>
+
+    <!-- MENTÉS -->
+    <div class="card" style="margin-top:16px">
+      <h3>Mentés</h3>
+      <div class="actions">
+        <button class="btn btn-primary" id="saveDraft" type="button">Vázlat mentése</button>
+        <button class="btn btn-ghost" id="openSite" type="button">Weboldal megnyitása (új fül)</button>
+        <button class="btn btn-ghost" id="clearHomeImage" type="button">Főoldali kép törlése</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const KEY = "huhabutor_content_draft";
+
+    const homeTitleEl = document.getElementById("homeTitle");
+    const homeSubtitleEl = document.getElementById("homeSubtitle");
+    const contactEmailEl = document.getElementById("contactEmail");
+    const contactPhoneEl = document.getElementById("contactPhone");
+
+    const homeImageInput = document.getElementById("homeImage");
+    const homePreview = document.getElementById("homePreview");
+    let homeImageBase64 = null;
+
+    // Oldalak / blokkok
+    const pageTitleEl = document.getElementById("pageTitle");
+    const pageIdEl = document.getElementById("pageId");
+    const genIdBtn = document.getElementById("genIdBtn");
+    const createPageBtn = document.getElementById("createPageBtn");
+
+    const pageSelect = document.getElementById("pageSelect");
+    const deletePageBtn = document.getElementById("deletePageBtn");
+
+    const blocksArea = document.getElementById("blocksArea");
+    const blockType = document.getElementById("blockType");
+    const addBlockBtn = document.getElementById("addBlockBtn");
+
+    const pagesListEl = document.getElementById("pagesList");
+
+    // Galéria
+    const categorySelect = document.getElementById("galleryCategory");
+    const newCategoryEl = document.getElementById("newCategory");
+    const addCategoryBtn = document.getElementById("addCategoryBtn");
+    const galleryImageInput = document.getElementById("galleryImage");
+    const galleryList = document.getElementById("galleryList");
+
+    function load() {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return null;
+      try { return JSON.parse(raw); } catch { return null; }
+    }
+    function save(data) { localStorage.setItem(KEY, JSON.stringify(data)); }
+
+    function defaultData() {
+      return {
+        home: { title:"", subtitle:"", image:null },
+        contact: { email:"", phone:"" },
+        pages: [],
+        gallery: { konyha: [], eloszoba: [], gardrob: [] }
+      };
+    }
+    function ensureDataShape(data) {
+      const d = data || defaultData();
+      d.home = d.home || { title:"", subtitle:"", image:null };
+      d.contact = d.contact || { email:"", phone:"" };
+      d.pages = Array.isArray(d.pages) ? d.pages : [];
+      d.gallery = d.gallery || {};
+      if (Object.keys(d.gallery).length === 0) {
+        d.gallery.konyha = [];
+        d.gallery.eloszoba = [];
+        d.gallery.gardrob = [];
+      }
+      return d;
+    }
+
+    function slugify(str) {
+      return (str || "")
+        .toLowerCase()
+        .trim()
+        .replace(/á/g,"a").replace(/é/g,"e").replace(/í/g,"i")
+        .replace(/ó/g,"o").replace(/ö/g,"o").replace(/ő/g,"o")
+        .replace(/ú/g,"u").replace(/ü/g,"u").replace(/ű/g,"u")
+        .replace(/[^a-z0-9]+/g,"-")
+        .replace(/^-+|-+$/g,"");
+    }
+
+    // Főoldal / Kontakt
+    function fillBasics(data) {
+      homeTitleEl.value = data?.home?.title ?? "";
+      homeSubtitleEl.value = data?.home?.subtitle ?? "";
+      contactEmailEl.value = data?.contact?.email ?? "";
+      contactPhoneEl.value = data?.contact?.phone ?? "";
+
+      if (data?.home?.image) {
+        homeImageBase64 = data.home.image;
+        homePreview.src = homeImageBase64;
+        homePreview.style.display = "block";
+      } else {
+        homePreview.style.display = "none";
+      }
+    }
+    function readBasics(data) {
+      data.home.title = homeTitleEl.value.trim();
+      data.home.subtitle = homeSubtitleEl.value.trim();
+      data.home.image = homeImageBase64;
+      data.contact.email = contactEmailEl.value.trim();
+      data.contact.phone = contactPhoneEl.value.trim();
+      return data;
+    }
+
+    homeImageInput.addEventListener("change", () => {
+      const file = homeImageInput.files && homeImageInput.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = () => {
+        homeImageBase64 = r.result;
+        homePreview.src = homeImageBase64;
+        homePreview.style.display = "block";
+      };
+      r.readAsDataURL(file);
+    });
+
+    document.getElementById("clearHomeImage").addEventListener("click", () => {
+      homeImageBase64 = null;
+      homePreview.src = "";
+      homePreview.style.display = "none";
+      homeImageInput.value = "";
+      alert("Főoldali kép törölve (mentsd a vázlatot is).");
+    });
+
+    // OLDALAK (blokkok)
+    function renderPageSelect(data) {
+      pageSelect.innerHTML = "";
+      if (!data.pages.length) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "Nincs extra oldal";
+        pageSelect.appendChild(opt);
+        return;
+      }
+      data.pages.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p.id;
+        opt.textContent = p.title;
+        pageSelect.appendChild(opt);
+      });
+    }
+
+    function getCurrentPage(data) {
+      const id = pageSelect.value;
+      return data.pages.find(p => p.id === id) || null;
+    }
+
+    function renderBlocks(data) {
+      blocksArea.innerHTML = "";
+      const pg = getCurrentPage(data);
+      if (!pg) {
+        blocksArea.innerHTML = `<p class="note">Válassz oldalt a blokkok szerkesztéséhez.</p>`;
+        return;
+      }
+
+      pg.blocks = Array.isArray(pg.blocks) ? pg.blocks : [];
+
+      pg.blocks.forEach((b, idx) => {
+        const box = document.createElement("div");
+        box.className = "block";
+
+        const head = document.createElement("div");
+        head.className = "block-title";
+        head.innerHTML = `<strong>${idx+1}. ${b.type}</strong>`;
+
+        const actions = document.createElement("div");
+        actions.className = "row";
+        actions.style.justifyContent = "flex-end";
+
+        const up = document.createElement("button");
+        up.className = "btn btn-ghost";
+        up.type = "button";
+        up.textContent = "↑";
+        up.onclick = () => {
+          if (idx === 0) return;
+          [pg.blocks[idx-1], pg.blocks[idx]] = [pg.blocks[idx], pg.blocks[idx-1]];
+          save(data); renderBlocks(data);
+        };
+
+        const down = document.createElement("button");
+        down.className = "btn btn-ghost";
+        down.type = "button";
+        down.textContent = "↓";
+        down.onclick = () => {
+          if (idx === pg.blocks.length-1) return;
+          [pg.blocks[idx+1], pg.blocks[idx]] = [pg.blocks[idx], pg.blocks[idx+1]];
+          save(data); renderBlocks(data);
+        };
+
+        const del = document.createElement("button");
+        del.className = "btn btn-danger";
+        del.type = "button";
+        del.textContent = "Törlés";
+        del.onclick = () => {
+          pg.blocks.splice(idx,1);
+          save(data); renderBlocks(data);
+        };
+
+        actions.appendChild(up);
+        actions.appendChild(down);
+        actions.appendChild(del);
+
+        head.appendChild(actions);
+        box.appendChild(head);
+
+        // blokk mezők
+        if (b.type === "heading") {
+          box.appendChild(makeInput("Címsor", b, "text"));
+        } else if (b.type === "text") {
+          box.appendChild(makeTextarea("Szöveg", b, "text"));
+        } else if (b.type === "list") {
+          box.appendChild(makeListEditor(data, pg, b));
+        } else if (b.type === "image") {
+          box.appendChild(makeImageEditor(data, b));
+        } else if (b.type === "button") {
+          box.appendChild(makeInput("Gomb felirat", b, "label"));
+          box.appendChild(makeInput("Link (pl. #contact vagy https://...)", b, "href"));
+        }
+
+        blocksArea.appendChild(box);
+      });
+
+      function makeInput(label, obj, key) {
+        const wrap = document.createElement("div");
+        const l = document.createElement("label");
+        l.textContent = label;
+        const i = document.createElement("input");
+        i.value = obj[key] || "";
+        i.oninput = () => { obj[key] = i.value; save(data); };
+        wrap.appendChild(l); wrap.appendChild(i);
+        return wrap;
+      }
+
+      function makeTextarea(label, obj, key) {
+        const wrap = document.createElement("div");
+        const l = document.createElement("label");
+        l.textContent = label;
+        const t = document.createElement("textarea");
+        t.value = obj[key] || "";
+        t.oninput = () => { obj[key] = t.value; save(data); };
+        wrap.appendChild(l); wrap.appendChild(t);
+        return wrap;
+      }
+
+      function makeListEditor(data, pg, block) {
+        const wrap = document.createElement("div");
+        const l = document.createElement("label");
+        l.textContent = "Lista elemek";
+        wrap.appendChild(l);
+
+        block.items = Array.isArray(block.items) ? block.items : [];
+        const list = document.createElement("div");
+        list.style.display = "grid";
+        list.style.gap = "8px";
+
+        const rerender = () => { save(data); renderBlocks(data); };
+
+        block.items.forEach((it, i) => {
+          const row = document.createElement("div");
+          row.className = "row";
+
+          const inp = document.createElement("input");
+          inp.value = it;
+          inp.oninput = () => { block.items[i] = inp.value; save(data); };
+
+          const del = document.createElement("button");
+          del.className = "btn btn-danger";
+          del.type = "button";
+          del.textContent = "X";
+          del.onclick = () => { block.items.splice(i,1); rerender(); };
+
+          row.appendChild(inp);
+          row.appendChild(del);
+          list.appendChild(row);
+        });
+
+        const add = document.createElement("button");
+        add.className = "btn btn-ghost";
+        add.type = "button";
+        add.textContent = "+ Új lista elem";
+        add.onclick = () => { block.items.push(""); rerender(); };
+
+        wrap.appendChild(add);
+        wrap.appendChild(list);
+        return wrap;
+      }
+
+      function makeImageEditor(data, block) {
+        const wrap = document.createElement("div");
+        const l = document.createElement("label");
+        l.textContent = "Kép";
+        const inp = document.createElement("input");
+        inp.type = "file";
+        inp.accept = "image/*";
+        const img = document.createElement("img");
+        img.className = "preview";
+        if (block.src) { img.src = block.src; img.style.display = "block"; }
+
+        inp.onchange = () => {
+          const file = inp.files && inp.files[0];
+          if (!file) return;
+          const r = new FileReader();
+          r.onload = () => {
+            block.src = r.result;
+            img.src = block.src;
+            img.style.display = "block";
+            save(data);
+          };
+          r.readAsDataURL(file);
+        };
+
+        wrap.appendChild(l);
+        wrap.appendChild(inp);
+        wrap.appendChild(img);
+        return wrap;
+      }
+    }
+
+    function renderPagesList(data) {
+      pagesListEl.innerHTML = "";
+      if (!data.pages.length) return;
+
+      data.pages.forEach(p => {
+        const box = document.createElement("div");
+        box.className = "page-item";
+        box.innerHTML = `
+          <div class="page-head">
+            <strong>${p.title}</strong>
+            <span class="pill">id: ${p.id}</span>
+            <span class="pill">blokkok: ${(p.blocks||[]).length}</span>
+          </div>
+        `;
+        pagesListEl.appendChild(box);
+      });
+    }
+
+    genIdBtn.addEventListener("click", () => {
+      pageIdEl.value = slugify(pageTitleEl.value);
+    });
+
+    createPageBtn.addEventListener("click", () => {
+      const data = ensureDataShape(load());
+      const title = (pageTitleEl.value || "").trim();
+      let id = (pageIdEl.value || "").trim();
+
+      if (!title) return alert("Adj meg menüpont nevet!");
+      if (!id) id = slugify(title);
+      if (!id) return alert("Nem sikerült ID-t készíteni.");
+
+      const reserved = new Set(["home","services","price","gallery","contact"]);
+      if (reserved.has(id)) return alert("Ez az ID foglalt. Adj meg másikat.");
+
+      if (data.pages.some(p => p.id === id)) return alert("Már van ilyen ID.");
+      data.pages.push({ id, title, blocks: [] });
+
+      save(data);
+      renderPageSelect(data);
+      pageSelect.value = id;
+      renderBlocks(data);
+      renderPagesList(data);
+
+      pageTitleEl.value = ""; pageIdEl.value = "";
+      alert("Oldal létrehozva. Most adj hozzá blokkokat!");
+    });
+
+    pageSelect.addEventListener("change", () => {
+      const data = ensureDataShape(load());
+      renderBlocks(data);
+    });
+
+    deletePageBtn.addEventListener("click", () => {
+      const data = ensureDataShape(load());
+      const pg = getCurrentPage(data);
+      if (!pg) return;
+      if (!confirm(`Törlöd: ${pg.title}?`)) return;
+      data.pages = data.pages.filter(p => p.id !== pg.id);
+      save(data);
+      renderPageSelect(data);
+      renderBlocks(data);
+      renderPagesList(data);
+    });
+
+    addBlockBtn.addEventListener("click", () => {
+      const data = ensureDataShape(load());
+      const pg = getCurrentPage(data);
+      if (!pg) return alert("Előbb válassz oldalt!");
+      pg.blocks = Array.isArray(pg.blocks) ? pg.blocks : [];
+
+      const t = blockType.value;
+      if (t === "heading") pg.blocks.push({ type:"heading", text:"Címsor" });
+      if (t === "text") pg.blocks.push({ type:"text", text:"Szöveg..." });
+      if (t === "list") pg.blocks.push({ type:"list", items:[""] });
+      if (t === "image") pg.blocks.push({ type:"image", src:null });
+      if (t === "button") pg.blocks.push({ type:"button", label:"Kapcsolat", href:"#contact" });
+
+      save(data);
+      renderBlocks(data);
+      renderPagesList(data);
+    });
+
+    // GALÉRIA
+    function refreshCategorySelect(data) {
+      const cats = Object.keys(data.gallery || {});
+      categorySelect.innerHTML = "";
+      cats.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c;
+        opt.textContent = c.charAt(0).toUpperCase() + c.slice(1);
+        categorySelect.appendChild(opt);
+      });
+      if (cats.length === 0) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "Nincs kategória";
+        categorySelect.appendChild(opt);
+      }
+    }
+
+    function renderCategoryImages(data) {
+      const cat = categorySelect.value;
+      const images = (data.gallery && data.gallery[cat]) ? data.gallery[cat] : [];
+      galleryList.innerHTML = "";
+      if (!cat) return;
+
+      if (!images.length) {
+        const p = document.createElement("p");
+        p.className = "note";
+        p.textContent = "Ebben a kategóriában még nincs kép.";
+        galleryList.appendChild(p);
+        return;
+      }
+
+      images.forEach((img64, idx) => {
+        const row = document.createElement("div");
+        row.className = "gallery-item";
+
+        const img = document.createElement("img");
+        img.className = "thumb";
+        img.src = img64;
+
+        const info = document.createElement("div");
+        info.className = "grow";
+        info.innerHTML = `<div><strong>#${idx+1}</strong></div><div class="small">LocalStorage kép</div>`;
+
+        const del = document.createElement("button");
+        del.className = "btn btn-danger";
+        del.textContent = "Törlés";
+        del.onclick = () => {
+          data.gallery[cat].splice(idx, 1);
+          save(data);
+          renderCategoryImages(data);
+        };
+
+        row.appendChild(img);
+        row.appendChild(info);
+        row.appendChild(del);
+        galleryList.appendChild(row);
+      });
+    }
+
+    addCategoryBtn.addEventListener("click", () => {
+      const name = (newCategoryEl.value || "").trim().toLowerCase();
+      if (!name) return alert("Írj be kategória nevet!");
+      const data = ensureDataShape(load());
+      if (data.gallery[name]) return alert("Ilyen kategória már létezik.");
+      data.gallery[name] = [];
+      save(data);
+      refreshCategorySelect(data);
+      categorySelect.value = name;
+      newCategoryEl.value = "";
+      renderCategoryImages(data);
+      alert("Kategória létrehozva.");
+    });
+
+    categorySelect.addEventListener("change", () => {
+      const data = ensureDataShape(load());
+      renderCategoryImages(data);
+    });
+
+    galleryImageInput.addEventListener("change", () => {
+      const file = galleryImageInput.files && galleryImageInput.files[0];
+      if (!file) return;
+
+      const data = ensureDataShape(load());
+      const cat = categorySelect.value;
+      if (!cat) return alert("Nincs kiválasztott kategória!");
+
+      const r = new FileReader();
+      r.onload = () => {
+        data.gallery[cat].push(r.result);
+        save(data);
+        galleryImageInput.value = "";
+        renderCategoryImages(data);
+        alert("Kép hozzáadva.");
+      };
+      r.readAsDataURL(file);
+    });
+
+    // INIT
+    const initData = ensureDataShape(load());
+    fillBasics(initData);
+    refreshCategorySelect(initData);
+    categorySelect.value = Object.keys(initData.gallery)[0] || "";
+    renderCategoryImages(initData);
+
+    renderPageSelect(initData);
+    if (initData.pages.length) pageSelect.value = initData.pages[0].id;
+    renderBlocks(initData);
+    renderPagesList(initData);
+
+    // Mentés
+    document.getElementById("saveDraft").addEventListener("click", () => {
+      const data = ensureDataShape(load());
+      save(readBasics(data));
+      alert("Vázlat elmentve.");
+    });
+
+    document.getElementById("openSite").addEventListener("click", () => {
+      window.open("./index.html", "_blank");
+    });
+  </script>
+</body>
+</html>

@@ -1,100 +1,135 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>HuHa Bútor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:,">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:," />
 </head>
+
 <body>
 
 <header class="site-header">
-  <div class="header-inner">
+  <div class="header-inner container">
     <h1 class="logo">HuHa Bútor</h1>
 
-    <nav class="main-nav">
+    <nav class="main-nav" id="mainNav">
       <a href="#home" class="nav-link active">Főoldal</a>
       <a href="#services" class="nav-link">Szolgáltatások</a>
       <a href="#price" class="nav-link">Árak</a>
       <a href="#gallery" class="nav-link">Galéria</a>
       <a href="#contact" class="nav-link">Kapcsolat</a>
+      <!-- adminból létrehozott menüpontok ide jönnek -->
     </nav>
   </div>
 </header>
 
-<main>
-  <section id="home" class="section active">
-    <h2>Egyedi bútorok, időtálló minőség</h2>
-    <p>Konyha • Gardrób • Előszoba • Teljes lakásberendezés</p>
-  </section>
+<main class="site-main">
+  <div class="container" id="mainContainer">
 
-  <section id="services" class="section">
-    <h2>Szolgáltatások</h2>
-    <ul>
-      <li>Egyedi konyhabútor tervezés és gyártás</li>
-      <li>Gardróbszekrények</li>
-      <li>Előszoba bútorok</li>
-      <li>Irodai és egyedi bútorok</li>
-    </ul>
-  </section>
+    <section id="home" class="section active">
+      <div class="card">
+        <!-- admin home.image ide kerül -->
+        <img id="homeHero" class="hero-img" alt="Főoldali kép" style="display:none;">
+        <h2 id="homeTitle">Egyedi bútorok, időtálló minőség</h2>
+        <p id="homeSubtitle">Konyha • Gardrób • Előszoba • Teljes lakásberendezés</p>
+      </div>
+    </section>
 
-  <section id="price" class="section">
-    <h2>Árak</h2>
-    <p>(Árlista?)</p>
-  </section>
+    <section id="services" class="section">
+      <div class="card">
+        <h2>Szolgáltatások</h2>
+        <ul>
+          <li>Egyedi konyhabútor tervezés és gyártás</li>
+          <li>Gardróbszekrények</li>
+          <li>Előszoba bútorok</li>
+          <li>Irodai és egyedi bútorok</li>
+        </ul>
+      </div>
+    </section>
 
-  <section id="gallery" class="section">
-    <h2>Galéria</h2>
+    <section id="price" class="section">
+      <div class="card">
+        <h2>Árak</h2>
+        <p>(Árlista később kerül feltöltésre.)</p>
+      </div>
+    </section>
 
-    <div class="gallery-tabs">
-      <button class="gallery-tab active" data-category="konyha">Konyha</button>
-      <button class="gallery-tab" data-category="eloszoba">Előszoba</button>
-      <button class="gallery-tab" data-category="gardrob">Gardrób</button>
-    </div>
+    <section id="gallery" class="section">
+      <div class="card">
+        <h2>Galéria</h2>
 
-    <div class="gallery-grid" id="galleryGrid"></div>
+        <div class="gallery-tabs" id="galleryTabs">
+          <!-- kategóriák adminból ide generálódnak -->
+        </div>
 
-    <!-- Lightbox -->
-    <div id="lightbox">
-      <span class="lightbox-nav lightbox-prev">&#10094;</span>
-      <img id="lightboxImg" alt="Nagyított kép">
-      <span class="lightbox-nav lightbox-next">&#10095;</span>
-    </div>
-  </section>
-
-  <section id="contact" class="section">
-    <h2>Kapcsolat</h2>
-
-    <form id="contactForm" class="contact-form">
-      <div class="form-row">
-        <label for="fullName">Teljes név</label>
-        <input id="fullName" name="fullName" type="text" placeholder="Pl. Kiss János" required>
+        <div class="gallery-grid" id="galleryGrid"></div>
       </div>
 
-      <div class="form-row">
-        <label for="email">Email cím</label>
-        <input id="email" name="email" type="email" placeholder="pl. janos@email.hu" required>
+      <!-- Lightbox -->
+      <div id="lightbox">
+        <span class="lightbox-nav lightbox-prev">&#10094;</span>
+        <img id="lightboxImg" alt="Nagyított kép" />
+        <span class="lightbox-nav lightbox-next">&#10095;</span>
       </div>
+    </section>
 
-      <div class="form-row">
-        <label for="message">Milyen ügyben keres minket?</label>
-        <textarea id="message" name="message" rows="6" placeholder="Írja le röviden, milyen munkáról van szó..." required></textarea>
+    <section id="contact" class="section">
+      <div class="card">
+        <h2>Kapcsolat</h2>
+
+        <form id="contactForm" class="contact-form">
+          <div class="form-row">
+            <label for="fullName">Teljes név</label>
+            <input id="fullName" name="fullName" type="text" placeholder="Pl. Kiss János" required />
+          </div>
+
+          <div class="form-row">
+            <label for="email">Email cím</label>
+            <input id="email" name="email" type="email" placeholder="pl. janos@email.hu" required />
+          </div>
+
+          <div class="form-row">
+            <label for="message">Milyen ügyben keres minket?</label>
+            <textarea id="message" name="message" rows="6" placeholder="Írja le röviden, milyen munkáról van szó..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">Email írása</button>
+
+          <p class="form-note">
+            A gomb megnyitja az alapértelmezett levelezőprogramot, előre kitöltött üzenettel.
+          </p>
+        </form>
+
+        <div class="contact-direct">
+          <p><strong>Email:</strong> <span id="contactEmailText">info@asztalosmuhely.hu</span></p>
+          <p><strong>Telefon:</strong> <span id="contactPhoneText">+36 30 123 4567</span></p>
+        </div>
       </div>
+    </section>
 
-      <button type="submit" class="btn-primary">Email írása</button>
-
-      <p class="form-note">
-        A gomb megnyitja az alapértelmezett levelezőprogramot, előre kitöltött üzenettel.
-      </p>
-    </form>
-
-    <div class="contact-direct">
-      <p><strong>Email:</strong> info@asztalosmuhely.hu</p>
-      <p><strong>Telefon:</strong> +36 30 123 4567</p>
-    </div>
-  </section>
+    <!-- adminból létrehozott extra szekciók ide kerülnek -->
+  </div>
 </main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-left">
+      <strong>HuHa Bútor</strong> © <span id="year"></span> Minden jog fenntartva.
+    </div>
+
+    <div class="footer-links">
+      <a href="#aszf" class="nav-link">ÁSZF</a>
+      <a href="#adatkezeles" class="nav-link">Adatkezelés</a>
+      <a href="#cookie" class="nav-link">Cookie</a>
+    </div>
+
+    <div class="footer-right">
+      Oldal készítője: <strong>Fazekas Péter</strong>
+    </div>
+  </div>
+</footer>
 
 <script src="script.js"></script>
 </body>
