@@ -470,3 +470,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   await loadAndRender();
 });
+// ===== MOBIL MENÜ TOGGLE =====
+(function () {
+  const btn = document.getElementById("menuBtn");
+  const nav = document.getElementById("mainNav");
+  if (!btn || !nav) return;
+
+  btn.addEventListener("click", () => {
+    const open = document.body.classList.toggle("nav-open");
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+
+  // ha rákattintasz egy menüpontra, csukja be mobilon
+  nav.addEventListener("click", (e) => {
+    const a = e.target.closest("a");
+    if (!a) return;
+    document.body.classList.remove("nav-open");
+    btn.setAttribute("aria-expanded", "false");
+  });
+
+  // ha átmész desktop méretre, legyen bezárva
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 820) {
+      document.body.classList.remove("nav-open");
+      btn.setAttribute("aria-expanded", "false");
+    }
+  });
+})();

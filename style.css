@@ -244,3 +244,67 @@ body{
   .gallery-grid, #galleryGrid {grid-template-columns: 1fr;}
   .gallery-item-btn img{height: 240px;}
 }
+/* ===== MOBIL MENÜ (A) + KÁRTYA/PADDING (B) ===== */
+
+.menu-btn{
+  display:none;
+  border:2px solid #fff;
+  background:transparent;
+  color:#fff;
+  font-size:18px;
+  font-weight:900;
+  padding:10px 14px;
+  border-radius:12px;
+  cursor:pointer;
+}
+
+/* kártyák/padding mobilon */
+@media (max-width: 820px){
+  .container{ padding:0 14px; }
+  .site-main{ padding:18px 0 26px; }
+
+  .card{
+    padding:18px;
+    border-radius:16px;
+  }
+
+  /* header legyen "3 soros": logó + gomb + lenyíló nav */
+  .header-inner{
+    position:relative;
+    width:100%;
+    max-width:1100px;
+    margin:0 auto;
+    padding:0 14px;
+    align-items:center;
+  }
+
+  .logo{ font-size:34px; }
+
+  .menu-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:6px;
+  }
+
+  /* nav alapból rejtve */
+  .main-nav{
+    display:none;
+    width:100%;
+    flex-direction:column;
+    gap:10px;
+    margin-top:10px;
+  }
+
+  /* ha nyitva van */
+  body.nav-open .main-nav{
+    display:flex;
+  }
+
+  .nav-link{
+    width:100%;
+    text-align:center;
+    padding:12px 14px;
+    border-radius:12px;
+  }
+}
